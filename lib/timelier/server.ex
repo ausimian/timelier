@@ -87,9 +87,9 @@ defmodule Timelier.Server do
   defp is_valid_elem?(part, elem), do: is_valid_value?(part, elem)
 
   defp is_valid_value?(_, :any),    do: true
-  defp is_valid_value?(:minute, V), do: V >= 0   and V <= 59
-  defp is_valid_value?(:hour, V),   do: V >= 0   and V <= 23
-  defp is_valid_value?(:day, V),    do: V >= -31 and V <= 31 and V !== 0
-  defp is_valid_value?(:weekday, V),do: V >= -7  and V <= 7  and V !== 0
-  defp is_valid_value?(:month, V),  do: V >= 1   and V <= 12
+  defp is_valid_value?(:minute, v), do: v >= 0   and v <= 59
+  defp is_valid_value?(:hour, v),   do: v >= 0   and v <= 23
+  defp is_valid_value?(:day, v),    do: v >= -31 and v <= 31 and v !== 0
+  defp is_valid_value?(:weekday, v),do: v >= -7  and v <= 7  and v !== 0
+  defp is_valid_value?(:month, v),  do: v >= 1   and v <= 12
 end
