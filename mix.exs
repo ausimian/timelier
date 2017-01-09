@@ -15,7 +15,7 @@ defmodule Timelier.Mixfile do
   # Type "mix help compile.app" for more information
   def application do
     [applications: [:logger],
-     mod: {Timelier.App, []},
+     mod: {Timelier, []},
      env: [{:provider, default_provider()},
            {:timezone, :local}]]
   end
