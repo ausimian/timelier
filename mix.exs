@@ -32,7 +32,8 @@ defmodule Timelier.Mixfile do
   defp deps do
     [
       {:earmark, "~> 1.0.3", only: :dev},
-      {:ex_doc, "~> 0.12", only: :dev}
+      {:ex_doc, "~> 0.12", only: :dev},
+      {:quixir, "~> 0.9", only: :test}
     ]
   end
 
