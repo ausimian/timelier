@@ -13,7 +13,6 @@ defmodule Timelier.Timer do
 
   def handle_info(:timeout, state) do
     Timelier.check()
-    # {:ok, tref} = :timer.apply_interval(60000, Timelier, :check, [])
     {:noreply, state, 60000}
   end
 end
