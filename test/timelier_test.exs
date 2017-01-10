@@ -5,23 +5,23 @@ defmodule TimelierTest do
 
   test "Updated crontabs must be valid" do
     ptest crontab: crontab() do
-      :ok = Timelier.update(crontab)
+      assert :ok == Timelier.update(crontab)
     end
   end
 
   test "A match on a date and time runs the task" do
-    ptest crontab: nonempty_crontab(), entry: int(min: 0, max: length(^crontab) - 1) do
-      :ok     = Timelier.update(crontab)
-      {pt, _} = Enum.at(crontab, entry)
-      time    = pattern_to_time(pt)
-      :ok     = Timelier.Server.check(time)
+    ptest entry: crontab_entry(), rpt: int(min: 1, max: 2) do
+      :ok  = Timelier.update(List.duplicate(entry, rpt))
+      {pattern, {_,_,[_,msg]}} = entry
+      time = pattern_to_time(pattern)
+      :ok  = Timelier.Server.check(time)
 
-      assert_receive :triggered, 100
+      for _ <- 1..rpt, do: assert_receive ^msg, 100
     end
   end
 
-  defp crontab,          do: list(tuple(like: {pattern(), value(action())}))
-  defp nonempty_crontab, do: list(of: tuple(like: {pattern(), value(action())}), min: 1)
+  defp crontab,       do: list(of: crontab_entry())
+  defp crontab_entry, do: tuple(like: {pattern(), action()})
 
   defp pattern do
     tuple(like: {wildcard(minute()),
@@ -39,7 +39,8 @@ defmodule TimelierTest do
 
   defp wildcard(generator), do: choose(from: [generator, value(:any)])
 
-  defp action,  do: {Kernel, :send, [self(), :triggered]}
+  defp action, do: tuple(like: {value(Kernel), value(:send), action_args()})
+  defp action_args, do: list(of: seq(of: [value(self()), any()]), min: 2, max: 2)
 
   defp pattern_to_time({minute, hour, day, weekday, month}) do
     { unwildcard(minute, minute()),
