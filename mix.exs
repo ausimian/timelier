@@ -7,6 +7,8 @@ defmodule Timelier.Mixfile do
      elixir: "~> 1.3",
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
+     test_coverage: [tool: ExCoveralls],
+     preferred_cli_env: ["coveralls": :test, "coveralls.detail": :test, "coveralls.html": :test],
      deps: deps()]
   end
 
@@ -33,7 +35,8 @@ defmodule Timelier.Mixfile do
     [
       {:earmark, "~> 1.0.3", only: :dev},
       {:ex_doc, "~> 0.12", only: :dev},
-      {:quixir, "~> 0.9", only: :test}
+      {:quixir, "~> 0.9", only: :test},
+      {:excoveralls, "~> 0.6", only: :test}
     ]
   end
 
