@@ -1,5 +1,7 @@
 # Timelier
 
+[![Build Status](https://travis-ci.org/ausimian/timelier.svg?branch=master)](https://travis-ci.org/ausimian/timelier)
+
 **TODO: Add description**
 
 ## Installation
