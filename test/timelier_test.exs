@@ -20,6 +20,32 @@ defmodule TimelierTest do
     end
   end
 
+  test "Negative day of month patterns" do
+    ptest d: int(min: -31, max: -1), m: month(), y: year() do
+      ldom = :calendar.last_day_of_the_month(y,m)
+      dneg = max(d, -ldom)
+      dom  = max(1, ldom + 1 + dneg)
+      dow  = :calendar.day_of_the_week(y,m,dom)
+      :ok  = Timelier.update([{{:any,:any,dneg,:any,m},{Kernel,:send,[self(), :fired]}}])
+      time = {0,10,dom,dow,m,y}
+      :ok  = Timelier.Server.check(time)
+
+      assert_receive :fired, 100
+    end
+  end
+
+  test "Negative day of week patterns" do
+    ptest d: int(min: -7, max: -1), m: month(), y: year() do
+      ldom = :calendar.last_day_of_the_month(y,m)
+      ldow = last_weekday_of_month(y,m,ldom,-d)
+      :ok  = Timelier.update([{{:any,:any,:any,d,m},{Kernel,:send,[self(), :fired]}}])
+      time = {0,10,ldow,-d,m,y}
+      :ok  = Timelier.Server.check(time)
+
+      assert_receive :fired, 100
+    end
+  end
+
   test "Timer fires and invokes server." do
     # Insert a crontab that always matches
     :ok = Timelier.update([{{:any,:any,:any,:any,:any},{Kernel,:send,[self(), :fired]}}])
@@ -27,6 +53,13 @@ defmodule TimelierTest do
     Process.exit(Process.whereis(Timelier.Timer), :kill)
     # Check the task is started
     assert_receive(:fired, 100)
+  end
+
+  defp last_weekday_of_month(y,m,d,wd) do
+    case :calendar.day_of_the_week(y,m,d) do
+      ^wd -> d
+      _   -> last_weekday_of_month(y,m,d-1,wd)
+    end
   end
 
   defp crontab,       do: list(of: crontab_entry())
@@ -45,6 +78,7 @@ defmodule TimelierTest do
   defp day,     do: int(min: 1, max: 31)
   defp weekday, do: int(min: 1, max:  7)
   defp month,   do: int(min: 1, max: 12)
+  defp year,    do: int(min: 2017, max: 10000)
 
   defp wildcard(generator), do: choose(from: [generator, value(:any)])
 
@@ -57,7 +91,7 @@ defmodule TimelierTest do
       unwildcard(day, day()),
       unwildcard(weekday, weekday()),
       unwildcard(month, month()),
-      2017}
+      unwildcard(:any, year())}
   end
 
   defp unwildcard(:any, g),   do: Pollution.Generator.as_stream(g) |> Enum.at(0)
