@@ -20,6 +20,17 @@ defmodule TimelierTest do
     end
   end
 
+  test "Lists provide alternate matches" do
+    ptest entry: crontab_entry_alts(), rpt: int(min: 1, max: 2) do
+      :ok  = Timelier.update(List.duplicate(entry, rpt))
+      {pattern, {_,_,[_,msg]}} = entry
+      time = alt_pattern_to_time(pattern)
+      :ok  = Timelier.Server.check(time)
+
+      for _ <- 1..rpt, do: assert_receive ^msg, 100
+    end
+  end
+
   test "Negative day of month patterns" do
     ptest d: int(min: -31, max: -1), m: month(), y: year() do
       ldom = :calendar.last_day_of_the_month(y,m)
@@ -64,6 +75,7 @@ defmodule TimelierTest do
 
   defp crontab,       do: list(of: crontab_entry())
   defp crontab_entry, do: tuple(like: {pattern(), action()})
+  defp crontab_entry_alts, do: tuple(like: {alt_pattern(), action()})
 
   defp pattern do
     tuple(like: {wildcard(minute()),
@@ -73,6 +85,14 @@ defmodule TimelierTest do
                  wildcard(month())})
   end
 
+  defp alt_pattern do
+    tuple(like: {alternate(minute()),
+                 alternate(hour()),
+                 alternate(day()),
+                 alternate(weekday()),
+                 alternate(month())})
+  end
+
   defp minute,  do: int(min: 0, max: 59)
   defp hour,    do: int(min: 0, max: 23)
   defp day,     do: int(min: 1, max: 31)
@@ -80,7 +100,8 @@ defmodule TimelierTest do
   defp month,   do: int(min: 1, max: 12)
   defp year,    do: int(min: 2017, max: 10000)
 
-  defp wildcard(generator), do: choose(from: [generator, value(:any)])
+  defp wildcard(generator),  do: choose(from: [generator, value(:any)])
+  defp alternate(generator), do: list(of: generator, min: 1, max: 3)
 
   defp action, do: tuple(like: {value(Kernel), value(:send), action_args()})
   defp action_args, do: list(of: seq(of: [value(self()), any()]), min: 2, max: 2)
@@ -91,6 +112,15 @@ defmodule TimelierTest do
       unwildcard(day, day()),
       unwildcard(weekday, weekday()),
       unwildcard(month, month()),
+      unwildcard(:any, year())}
+  end
+
+  defp alt_pattern_to_time({minutes, hours, days, weekdays, months}) do
+    { List.last(minutes),
+      List.last(hours),
+      List.last(days),
+      List.last(weekdays),
+      List.last(months),
       unwildcard(:any, year())}
   end
 
