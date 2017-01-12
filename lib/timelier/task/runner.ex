@@ -1,12 +1,7 @@
 defmodule Timelier.Task.Runner do
   use GenServer
-  @moduledoc """
-  Responsible for launching the specified task.
-  """
+  @moduledoc false
 
-  @doc """
-  Start the task.
-  """
   def start_link(mfa) do
     GenServer.start_link(__MODULE__, mfa)
   end

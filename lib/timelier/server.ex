@@ -1,11 +1,7 @@
 defmodule Timelier.Server do
   use GenServer
 
-  @moduledoc """
-  This module defines a `GenServer` that maintains the crontab as its
-  state and will check a supplied time against this state, starting any
-  tasks whose time pattern matches.
-  """
+  @moduledoc false
 
   @name __MODULE__
 

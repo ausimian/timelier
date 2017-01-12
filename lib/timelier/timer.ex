@@ -1,8 +1,7 @@
 defmodule Timelier.Timer do
   use GenServer
-  @moduledoc """
-  Responsible for the timer that checks the crontab every minute.
-  """
+  @moduledoc false
+
   @name __MODULE__
 
   def start_link() do
