@@ -1,6 +1,6 @@
 # Timelier
 
-[![Build Status](https://travis-ci.org/ausimian/timelier.svg?branch=master)](https://travis-ci.org/ausimian/timelier) [![Coverage Status](https://coveralls.io/repos/github/ausimian/timelier/badge.svg?branch=master)](https://coveralls.io/github/ausimian/timelier?branch=master)[![Ebert](https://ebertapp.io/github/ausimian/timelier.svg)](https://ebertapp.io/github/ausimian/timelier)
+[![Build Status](https://travis-ci.org/ausimian/timelier.svg?branch=master)](https://travis-ci.org/ausimian/timelier) [![Coverage Status](https://coveralls.io/repos/github/ausimian/timelier/badge.svg?branch=master)](https://coveralls.io/github/ausimian/timelier?branch=master) [![Ebert](https://ebertapp.io/github/ausimian/timelier.svg)](https://ebertapp.io/github/ausimian/timelier)
 
 **TODO: Add description**
 
