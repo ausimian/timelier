@@ -9,7 +9,7 @@ defmodule Timelier.Timer do
   end
 
   def init([]) do
-    {:ok, tref} = :timer.tc(60_000, Timelier, :check, [])
+    {:ok, tref} = :timer.apply_interval(60_000, Timelier, :check, [])
     {:ok, tref, 0}
   end
 
