@@ -2,7 +2,9 @@
 
 [![Build Status](https://travis-ci.org/ausimian/timelier.svg?branch=master)](https://travis-ci.org/ausimian/timelier) [![Coverage Status](https://coveralls.io/repos/github/ausimian/timelier/badge.svg?branch=master)](https://coveralls.io/github/ausimian/timelier?branch=master) [![Ebert](https://ebertapp.io/github/ausimian/timelier.svg)](https://ebertapp.io/github/ausimian/timelier)
 
-**TODO: Add description**
+Timelier is a _cron_ style scheduling application for Elixir. It will
+match a list of time 'patterns' against the current time and start any
+tasks associated with each matching pattern.
 
 ## Installation
 

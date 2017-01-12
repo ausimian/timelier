@@ -69,7 +69,7 @@ defmodule TimelierTest do
   defp last_weekday_of_month(y,m,d,wd) do
     case :calendar.day_of_the_week(y,m,d) do
       ^wd -> d
-      _   -> last_weekday_of_month(y,m,d-1,wd)
+      _   -> last_weekday_of_month(y,m,d - 1,wd)
     end
   end
 
@@ -98,7 +98,7 @@ defmodule TimelierTest do
   defp day,     do: int(min: 1, max: 31)
   defp weekday, do: int(min: 1, max:  7)
   defp month,   do: int(min: 1, max: 12)
-  defp year,    do: int(min: 2017, max: 10000)
+  defp year,    do: int(min: 2017, max: 10_000)
 
   defp wildcard(generator),  do: choose(from: [generator, value(:any)])
   defp alternate(generator), do: list(of: generator, min: 1, max: 3)
@@ -107,21 +107,21 @@ defmodule TimelierTest do
   defp action_args, do: list(of: seq(of: [value(self()), any()]), min: 2, max: 2)
 
   defp pattern_to_time({minute, hour, day, weekday, month}) do
-    { unwildcard(minute, minute()),
-      unwildcard(hour, hour()),
-      unwildcard(day, day()),
-      unwildcard(weekday, weekday()),
-      unwildcard(month, month()),
-      unwildcard(:any, year())}
+    {unwildcard(minute, minute()),
+     unwildcard(hour, hour()),
+     unwildcard(day, day()),
+     unwildcard(weekday, weekday()),
+     unwildcard(month, month()),
+     unwildcard(:any, year())}
   end
 
   defp alt_pattern_to_time({minutes, hours, days, weekdays, months}) do
-    { List.last(minutes),
-      List.last(hours),
-      List.last(days),
-      List.last(weekdays),
-      List.last(months),
-      unwildcard(:any, year())}
+    {List.last(minutes),
+     List.last(hours),
+     List.last(days),
+     List.last(weekdays),
+     List.last(months),
+     unwildcard(:any, year())}
   end
 
   defp unwildcard(:any, g),   do: Pollution.Generator.as_stream(g) |> Enum.at(0)
