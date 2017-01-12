@@ -9,11 +9,13 @@ defmodule Timelier.Timer do
   end
 
   def init([]) do
-    {:ok, [], 0}
+    {:ok, tref} = :timer.tc(60_000, Timelier, :check, [])
+    {:ok, tref, 0}
   end
 
   def handle_info(:timeout, state) do
     Timelier.check()
-    {:noreply, state, 60_000}
+    {:noreply, state}
   end
+
 end
