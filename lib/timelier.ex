@@ -32,7 +32,8 @@ defmodule Timelier do
 
   - A single specific value (see the types for the valid ranges).
   - Wildcarded with `:any`, which will always match.
-  - Described as a list, in which case the elements describe the set of valid values.
+  - Described as a list, in which case the elements describe the set of
+    valid values.
 
   In addition, the `day` and `weekday` elements support some special
   ranges:
@@ -64,6 +65,7 @@ defmodule Timelier do
              provider: {mod, func, [arg1, arg2 ...]}
 
   """
+  alias Timelier.Server
 
   use Application
 
@@ -127,7 +129,7 @@ defmodule Timelier do
   Notwithstanding the BEAM's reputation for reliability and longevity,
   10000 is probably enough.
   """
-  @type year()    :: 1970..10000
+  @type year()    :: 1970..10_000
 
 
   @typedoc """
@@ -137,28 +139,28 @@ defmodule Timelier do
   month. Each element may a distinct value, a list of alternatives or a
   wildcard.
   """
-  @type pattern() :: { minute()  | [minute()]  | :any,
-                       hour()    | [hour()]    | :any,
-                       day()     | [day()]     | :any,
-                       weekday() | [weekday()] | :any,
-                       month()   | [month()]   | :any }
+  @type pattern() :: {minute()  | [minute()]  | :any,
+                      hour()    | [hour()]    | :any,
+                      day()     | [day()]     | :any,
+                      weekday() | [weekday()] | :any,
+                      month()   | [month()]   | :any}
 
   @typedoc """
   Represents actual time.
   """
-  @type time()    :: { minute(),
-                       hour(),
-                       day(),
-                       weekday(),
-                       month(),
-                       year()}
+  @type time()    :: {minute(),
+                      hour(),
+                      day(),
+                      weekday(),
+                      month(),
+                      year()}
 
   @typedoc """
   Represents the type of a task.
 
   A 3-tuple holding the module, function and any arguments to be applied.
   """
-  @type task()    :: { atom(), atom(), [any()] }
+  @type task()    :: {atom(), atom(), [any()]}
 
   @typedoc """
   Represents an individual entry in the crontab.
@@ -166,7 +168,7 @@ defmodule Timelier do
   Composed of a pattern and a task. When the pattern matches the time,
   the task is started.
   """
-  @type entry()   :: { pattern(), task() }
+  @type entry()   :: {pattern(), task()}
 
   @typedoc """
   A list of crontab entries.
@@ -179,7 +181,7 @@ defmodule Timelier do
   If the crontab is invalid, this function will crash.
   """
   @spec update(crontab :: crontab) :: :ok
-  def update(crontab), do: Timelier.Server.update(crontab)
+  def update(crontab), do: Server.update(crontab)
 
   @doc """
   Check the current crontab for any pending tasks.
@@ -201,6 +203,6 @@ defmodule Timelier do
     {yr, mon, day} = date
     {hr, min, _}   = time
 
-    Timelier.Server.check({min, hr, day, weekday, mon, yr})
+    Server.check({min, hr, day, weekday, mon, yr})
   end
 end

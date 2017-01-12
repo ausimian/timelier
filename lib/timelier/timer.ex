@@ -1,6 +1,8 @@
 defmodule Timelier.Timer do
   use GenServer
-
+  @moduledoc """
+  Responsible for the timer that checks the crontab every minute.
+  """
   @name __MODULE__
 
   def start_link() do
@@ -13,6 +15,6 @@ defmodule Timelier.Timer do
 
   def handle_info(:timeout, state) do
     Timelier.check()
-    {:noreply, state, 60000}
+    {:noreply, state, 60_000}
   end
 end

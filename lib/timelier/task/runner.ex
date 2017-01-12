@@ -1,5 +1,8 @@
 defmodule Timelier.Task.Runner do
   use GenServer
+  @moduledoc """
+  Responsible for launching the specified task.
+  """
 
   @doc """
   Start the task.
