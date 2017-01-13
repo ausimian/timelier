@@ -3,6 +3,10 @@ defmodule TimelierTest do
   use Quixir
   doctest Timelier
 
+  test "Cannot start timer twice" do
+    assert :ok != Timelier.start_timer()
+  end
+
   test "Updated crontabs must be valid" do
     ptest crontab: crontab() do
       assert :ok == Timelier.update(crontab)
