@@ -14,7 +14,7 @@ defmodule Timelier.Mixfile do
      # Documentation
      name: "Timelier",
      description: "A cron-style scheduler for Elixir.",
-     source_url: "https://github.com/ausimian/timerlier",
+     source_url: repo(),
 
      # Package
      package: package()]
@@ -35,7 +35,7 @@ defmodule Timelier.Mixfile do
       name: :timelier,
       maintainers: ["Nick Gunn"],
       licences: ["MIT"],
-      links: %{"GitHub" => "https://github.com/ausimian/timelier"}
+      links: %{"GitHub" => repo()}
     ]
   end
 
@@ -48,6 +48,8 @@ defmodule Timelier.Mixfile do
       {:quixir,      "~> 0.9",   only: :test}
     ]
   end
+
+  defp repo, do: "https://github.com/ausimian/timelier"
 
   defp default_provider do
     {Timelier, :get_crontab, []}
