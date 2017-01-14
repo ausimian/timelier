@@ -77,7 +77,8 @@ defmodule Timelier do
     # Define workers and child supervisors to be supervised
     children = [
       supervisor(Timelier.Task.Supervisor, []),
-      worker(Timelier.Server, [])
+      worker(Timelier.Server, []),
+      worker(Timelier.Timer, [])
       # Starts a worker by calling: Timelier.Worker.start_link(arg1, arg2, arg3)
 
       # worker(Timelier.Worker, [arg1, arg2, arg3]),
@@ -88,6 +89,7 @@ defmodule Timelier do
     opts = [strategy: :rest_for_one, name: Timelier.Supervisor]
     Supervisor.start_link(children, opts)
   end
+
 
   @typedoc """
   Valid range for the minute element.
@@ -203,21 +205,4 @@ defmodule Timelier do
 
     Server.check({min, hr, day, weekday, mon, yr})
   end
-
-  @doc """
-  Start the crontab timer.
-
-  The top-level application will typically call this during its own start-up
-  sequence.
-  """
-  @spec start_timer() :: :ok | {:error, {:already_started, pid()} | term()}
-  def start_timer() do
-    import Supervisor.Spec, warn: false
-    case Supervisor.start_child(Timelier.Supervisor, worker(Timelier.Timer, [])) do
-      {:ok, _}    -> :ok
-      {:ok, _, _} -> :ok
-      error       -> error
-    end
-  end
-
 end
