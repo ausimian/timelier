@@ -178,7 +178,7 @@ defmodule Timelier do
   """
   @spec check() :: :ok
   def check() do
-    tz   = Application.get_env(Timelier, :timezone, :local)
+    tz   = Application.get_env(:timelier, :timezone, :local)
     func = case tz do
              :utc   -> :now_to_universal_time
              :local -> :now_to_local_time
