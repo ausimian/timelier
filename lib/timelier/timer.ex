@@ -14,6 +14,10 @@ defmodule Timelier.Timer do
   end
 
   def handle_info(:timeout, state) do
+    {mod, fun, args} = Application.get_env(:timelier, :provider)
+    {:ok, crontab}   = apply(mod, fun, args)
+    :ok = Timelier.update(crontab)
+
     Timelier.check()
     {:noreply, state}
   end
