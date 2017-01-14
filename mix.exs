@@ -3,7 +3,7 @@ defmodule Timelier.Mixfile do
 
   def project do
     [app: :timelier,
-     version: "0.1.0",
+     version: "0.9.0",
      elixir: "~> 1.3",
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
@@ -14,28 +14,31 @@ defmodule Timelier.Mixfile do
      # Documentation
      name: "Timelier",
      description: "A cron-style scheduler for Elixir.",
-     source_url: "https://github.com/ausimian/timerlier"]
+     source_url: repo(),
+
+     # Package
+     package: package()]
   end
 
   # Configuration for the OTP application
   #
   # Type "mix help compile.app" for more information
   def application do
-    [applications: [:logger],
+    [applications: [],
      mod: {Timelier, []},
      env: [{:provider, default_provider()},
            {:timezone, :local}]]
   end
 
-  # Dependencies can be Hex packages:
-  #
-  #   {:mydep, "~> 0.3.0"}
-  #
-  # Or git/path repositories:
-  #
-  #   {:mydep, git: "https://github.com/elixir-lang/mydep.git", tag: "0.1.0"}
-  #
-  # Type "mix help deps" for more examples and options
+  defp package do
+    [
+      name: :timelier,
+      maintainers: ["Nick Gunn"],
+      licences: ["MIT"],
+      links: %{"GitHub" => repo()}
+    ]
+  end
+
   defp deps do
     [
       {:credo,       "~> 0.5",   only: [:dev, :test]},
@@ -45,6 +48,8 @@ defmodule Timelier.Mixfile do
       {:quixir,      "~> 0.9",   only: :test}
     ]
   end
+
+  defp repo, do: "https://github.com/ausimian/timelier"
 
   defp default_provider do
     {Timelier, :get_crontab, []}
