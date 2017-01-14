@@ -3,7 +3,7 @@ defmodule Timelier.Mixfile do
 
   def project do
     [app: :timelier,
-     version: "0.9.0",
+     version: "0.9.1",
      elixir: "~> 1.3",
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
