@@ -33,15 +33,15 @@ defmodule Timelier.Mixfile do
   # Type "mix help deps" for more examples and options
   defp deps do
     [
-      {:credo, "~> 0.5", only: [:dev, :test]},
-      {:earmark, "~> 1.0.3", only: :dev},
-      {:ex_doc, "~> 0.12", only: :dev},
-      {:excoveralls, "~> 0.6", only: :test},
-      {:quixir, "~> 0.9", only: :test}
+      {:credo,       "~> 0.5",   only: [:dev, :test]},
+      {:earmark,     "~> 1.0.3", only: :dev},
+      {:ex_doc,      "~> 0.12",  only: :dev},
+      {:excoveralls, "~> 0.6",   only: :test},
+      {:quixir,      "~> 0.9",   only: :test}
     ]
   end
 
   defp default_provider do
-    {Application, :get_env, [:timelier, :crontab, []]}
+    {Timelier, :get_crontab, []}
   end
 end

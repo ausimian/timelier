@@ -163,6 +163,14 @@ defmodule Timelier do
   @type crontab() :: [entry()]
 
   @doc """
+  Provide a default configuration from configuration.
+  """
+  @spec get_crontab() :: {:ok, term()}
+  def get_crontab() do
+    {:ok, Application.get_env(:timelier, :crontab, [])}
+  end
+
+  @doc """
   Updates the current crontab configuration.
 
   If the crontab is invalid, this function will crash.

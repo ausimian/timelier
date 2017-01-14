@@ -58,11 +58,8 @@ defmodule TimelierTest do
   end
 
   test "Timer fires and invokes server." do
-    # Insert a crontab that always matches
     :ok = Timelier.update([{{:any,:any,:any,:any,:any},{Kernel,:send,[self(), :fired]}}])
-    # Kill the timer process so that it automatically restarts and starts checking
-    Process.exit(Process.whereis(Timelier.Timer), :kill)
-    # Check the task is started
+    :ok = Timelier.check()
     assert_receive(:fired, 100)
   end
 
