@@ -9,7 +9,12 @@ defmodule Timelier.Mixfile do
      start_permanent: Mix.env == :prod,
      test_coverage: [tool: ExCoveralls],
      preferred_cli_env: ["coveralls": :test, "coveralls.detail": :test, "coveralls.html": :test],
-     deps: deps()]
+     deps: deps(),
+
+     # Documentation
+     name: "Timelier",
+     description: "A cron-style scheduler for Elixir.",
+     source_url: "https://github.com/ausimian/timerlier"]
   end
 
   # Configuration for the OTP application

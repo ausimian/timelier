@@ -9,7 +9,7 @@ defmodule Timelier do
   tasks associated with each matching pattern.
 
   By default, the set of scheduled tasks is sourced from the `crontab`
-  environment variable within the `Timelier` application or `[]` if not
+  environment variable within the `:timelier` application or `[]` if not
   present. For example, the following snippet from config.exs defines a
   task that runs every 15 minutes and dumps a message via
   `:error_logger.info_msg/1`.
@@ -17,15 +17,47 @@ defmodule Timelier do
       config :timelier,
              crontab: [{{[0,15,30,45],:any,:any,:any,:any}, {:error_logger,:info_msg,['Hello world.~n']}}]
 
+  ## Starting Timelier
+  The crontab for Timelier will often contain tasks whose execution is
+  dependent upon particular applications running. To ensure `timelier`
+  can successfully start tasks defined in your application (or its
+  dependencies), add it as an [![included application](http://erlang.org/doc/design_principles/included_applications.html)]:
+
+      def application do
+        [included_applications: [:timelier]]
+      end
+
+  and append it's root supervisor to the list of children that your own top-level
+  supervisor starts, e.g.
+
+      def start(_type, _args) do
+        import Supervisor.Spec, warn: false
+
+        # Define workers and child supervisors to be supervised
+        children = [
+          worker(YourApp.YourWorker, []),
+          # Other children in your supervision tree...
+
+          supervisor(Timelier.Supervisor, []) # Add timelier's top-level supervisor
+        ]
+
+        opts = [strategy: :one_for_one, name: YourApp.Supervisor]
+        Supervisor.start_link(children, opts)
+      end
+
+  This should ensure that all appropriate supervision trees should be
+  started before Timelier begins starting tasks.
+
   ## Crontab format
   The format of the crontab is a list of tuple pairs, where the first
   tuple describes the time pattern and the second specifies the task to be
   invoked when the pattern matches the current time.
 
-  The task is 3-tuple of {mod, func, args} and is run by a temporary
-  GenServer under a simple-one-for-one strategy. The return result of
-  applying this triple is ignored, but any crashes will generate a crash
-  report.
+  The task is 3-tuple of {mod, func, args}, as would be passed to
+  `Kernel.apply/3` and is run by a temporary GenServer under a
+  simple-one-for-one strategy. The return result of applying this triple
+  is ignored, but any crashes will generate a crash report, if `sasl` is
+  also running.
 
   The time pattern is 5-tuple specifying the minute, hour, day,
   weekday, and month. Each element may be:
@@ -44,6 +76,15 @@ defmodule Timelier do
   - The `weekday` element may take negative values in the range -7 ..
     -1 where -1 means 'the last Monday of the month' and -7 means 'the
     last Sunday of the month'.
+
+  ### Example patterns
+  | Pattern                                     | Runs                 |
+  | ------------------------------------------- | -------------------- |
+  | `{:any, :any, :any, :any, :any}`            | every minute         |
+  | `{[0, 15, 30, 45], :any, :any, :any, :any}` | every 15 minutes     |
+  | `{0, 9, :any, [1, 2, 3, 4, 5], :any}`       | 9am on weekdays      |
+  | `{30, 22, -1, :any, :any}`                  | 10.30pm on the last day of every month |
+  | `{0, :any, :any, -5, [12,1,2]}`             | every hour on the last friday of Jan, Feb, Dec |
 
   ### Time evaluation
   Every minute, the application converts the current timestamp (from
@@ -163,7 +204,7 @@ defmodule Timelier do
   @type crontab() :: [entry()]
 
   @doc """
-  Provide a default configuration from configuration.
+  Provide a default crontab from configuration.
   """
   @spec get_crontab() :: {:ok, term()}
   def get_crontab() do
