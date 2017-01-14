@@ -42,6 +42,6 @@ defmodule Timelier.Mixfile do
   end
 
   defp default_provider do
-    {Application, :get_env, [Timelier, :crontab, []]}
+    {Application, :get_env, [:timelier, :crontab, []]}
   end
 end
