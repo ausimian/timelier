@@ -16,7 +16,7 @@ Timelier is a _cron_ style scheduling application for Elixir. It will match a li
     ```
 
   2. To ensure `timelier` can successfully start tasks defined in your application (or
-     its dependencies), add it as an [![included application](http://erlang.org/doc/design_principles/included_applications.html)]:
+     its dependencies), add it as an [included application](http://erlang.org/doc/design_principles/included_applications.html):
 
     ```elixir
     def application do
