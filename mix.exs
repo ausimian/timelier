@@ -34,7 +34,7 @@ defmodule Timelier.Mixfile do
     [
       name: :timelier,
       maintainers: ["Nick Gunn"],
-      licences: ["MIT"],
+      licenses: ["MIT"],
       links: %{"GitHub" => repo()}
     ]
   end
