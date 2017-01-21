@@ -11,7 +11,7 @@ Timelier is a _cron_ style scheduling application for Elixir. It will match a li
 
     ```elixir
     def deps do
-      [{:timelier, "~> 0.9.1"}]
+      [{:timelier, "~> 0.9.2"}]
     end
     ```
 

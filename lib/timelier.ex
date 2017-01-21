@@ -21,7 +21,7 @@ defmodule Timelier do
   The crontab for Timelier will often contain tasks whose execution is
   dependent upon particular applications running. To ensure `timelier`
   can successfully start tasks defined in your application (or its
-  dependencies), add it as an [![included application](http://erlang.org/doc/design_principles/included_applications.html)]:
+  dependencies), add it as an [included application](http://erlang.org/doc/design_principles/included_applications.html):
 
       def application do
         [included_applications: [:timelier]]
