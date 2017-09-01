@@ -24,8 +24,8 @@ Timelier is a _cron_ style scheduling application for Elixir. It will match a li
     end
     ```
     
-    and append it's root supervisor to the list of children that your own top-level
-    supervisor starts, e.g.
+   and append it's root supervisor to the list of children that your own top-level
+   supervisor starts, e.g.
     
     ```elixir
     def start(_type, _args) do
