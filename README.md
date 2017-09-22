@@ -9,40 +9,41 @@ Timelier is a _cron_ style scheduling application for Elixir. It will match a li
 
   1. Add `timelier` to your list of dependencies in `mix.exs`:
 
-    ```elixir
-    def deps do
-      [{:timelier, "~> 0.9.2"}]
-    end
-    ```
+    
+```elixir
+  def deps do
+    [{:timelier, "~> 0.9.2"}]
+  end
+```
 
   2. To ensure `timelier` can successfully start tasks defined in your application (or
      its dependencies), add it as an [included application](http://erlang.org/doc/design_principles/included_applications.html):
 
-    ```elixir
-    def application do
-      [included_applications: [:timelier]]
-    end
-    ```
+```elixir
+def application do
+  [included_applications: [:timelier]]
+end
+```
     
-    and append it's root supervisor to the list of children that your own top-level
-    supervisor starts, e.g.
+   and append it's root supervisor to the list of children that your own top-level
+   supervisor starts, e.g.
     
-    ```elixir
-    def start(_type, _args) do
-      import Supervisor.Spec, warn: false
+```elixir
+def start(_type, _args) do
+  import Supervisor.Spec, warn: false
 
-      # Define workers and child supervisors to be supervised
-      children = [
-        worker(YourApp.YourWorker, []),
-        # Other children in your supervision tree...
+  # Define workers and child supervisors to be supervised
+  children = [
+    worker(YourApp.YourWorker, []),
+    # Other children in your supervision tree...
 
-        supervisor(Timelier.Supervisor, []) # Add timelier's top-level supervisor
-      ]
+    supervisor(Timelier.Supervisor, []) # Add timelier's top-level supervisor
+  ]
 
-      opts = [strategy: :one_for_one, name: YourApp.Supervisor]
-      Supervisor.start_link(children, opts)
-    end
-    ```
+  opts = [strategy: :one_for_one, name: YourApp.Supervisor]
+  Supervisor.start_link(children, opts)
+end
+```
     
 ## Configuration
 
